@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useProgress } from '../context/ProgressContext';
+import BottomNavigation from './BottomNavigation';
 
 const Container = styled.div`
   width: 100%;
@@ -9,6 +11,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  padding-bottom: 80px;
 `;
 
 const Header = styled.div`
@@ -42,7 +45,7 @@ const Title = styled.h1`
 const MapContainer = styled.div`
   flex: 1;
   position: relative;
-  background-image: url('/assets/gwangju-map.jpeg');
+  background-image: url('/assets/gwangju-map.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -67,7 +70,7 @@ const MissionMarker = styled.div`
 const MarkerIcon = styled.div`
   width: 40px;
   height: 40px;
-  background-color: #ff4444;
+  background-color: ${props => props.visited ? '#4CAF50' : '#ff4444'};
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -76,6 +79,7 @@ const MarkerIcon = styled.div`
   font-size: 20px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
   margin-bottom: 5px;
+  border: ${props => props.visited ? '3px solid #2E7D32' : 'none'};
 `;
 
 const MarkerLabel = styled.div`
@@ -90,31 +94,7 @@ const MarkerLabel = styled.div`
   white-space: nowrap;
 `;
 
-const BottomNav = styled.div`
-  width: 100%;
-  height: 80px;
-  background-color: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
-`;
 
-const NavIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 24px;
-  color: #333;
-  transition: color 0.2s ease;
-  
-  &:hover {
-    color: #ff4444;
-  }
-`;
 
 const locations = [
   { id: 'sangmugwan', name: '상무관', x: '25%', y: '45%' },
@@ -128,6 +108,7 @@ const locations = [
 
 function MapPage() {
   const navigate = useNavigate();
+  const { isLocationVisited } = useProgress();
 
   const handleMarkerClick = (locationId) => {
     navigate(`/mission/${locationId}`);
@@ -147,18 +128,15 @@ function MapPage() {
             style={{ left: location.x, top: location.y }}
             onClick={() => handleMarkerClick(location.id)}
           >
-            <MarkerIcon>📍</MarkerIcon>
+            <MarkerIcon visited={isLocationVisited(location.id)}>
+              {isLocationVisited(location.id) ? '✅' : '📍'}
+            </MarkerIcon>
             <MarkerLabel>{location.name}</MarkerLabel>
           </MissionMarker>
         ))}
       </MapContainer>
       
-      <BottomNav>
-        <NavIcon>🏠</NavIcon>
-        <NavIcon>🗺️</NavIcon>
-        <NavIcon>🔍</NavIcon>
-        <NavIcon>📋</NavIcon>
-      </BottomNav>
+      <BottomNavigation />
     </Container>
   );
 }

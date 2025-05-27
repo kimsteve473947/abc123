@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useProgress } from '../context/ProgressContext';
+import BottomNavigation from './BottomNavigation';
 
 const Container = styled.div`
   width: 100%;
@@ -81,34 +83,29 @@ const MissionText = styled.p`
   color: #333;
   text-align: center;
   line-height: 1.5;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
-const BottomNav = styled.div`
-  width: 100%;
-  height: 80px;
-  background-color: white;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
-`;
-
-const NavIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const ActionButton = styled.button`
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 24px;
-  color: #333;
-  transition: color 0.2s ease;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 15px;
+  transition: transform 0.2s ease;
   
   &:hover {
-    color: #ff4444;
+    transform: translateY(-2px);
   }
 `;
+
+
 
 const locationData = {
   'sangmugwan': {
@@ -145,10 +142,23 @@ function MissionPage() {
   const navigate = useNavigate();
   const { locationId } = useParams();
   const [photoTaken, setPhotoTaken] = useState(false);
+  const { markLocationVisited, markPhotoTaken, markVideoCompleted } = useProgress();
   
   const location = locationData[locationId];
 
+  useEffect(() => {
+    // 페이지 방문 시 해당 장소를 방문한 것으로 표시
+    markLocationVisited(locationId);
+  }, [locationId, markLocationVisited]);
+
   const handlePhotoClick = () => {
+    // 사진 촬영 시뮬레이션
+    markPhotoTaken(locationId, { location: location.name });
+    setPhotoTaken(true);
+    alert('사진이 촬영되었습니다!');
+  };
+
+  const handleVideoClick = () => {
     const availableVideos = ['daein-market', 'hospital', 'sangmugwan'];
     if (availableVideos.includes(locationId)) {
       navigate(`/video/${locationId}`);
@@ -157,8 +167,12 @@ function MissionPage() {
     }
   };
 
+  const handleDetailClick = () => {
+    navigate(`/location/${locationId}`);
+  };
+
   const handleBackClick = () => {
-    navigate('/');
+    navigate('/map');
   };
 
   if (!location) {
@@ -180,17 +194,24 @@ function MissionPage() {
         </PhotoContainer>
         
         <MissionText>
-          Go to this location<br />
-          and take a photo!
+          이 장소에서 사진을 촬영하고<br />
+          역사를 기록해보세요!
         </MissionText>
+        
+        <ActionButton onClick={handlePhotoClick}>
+          📸 사진 촬영하기
+        </ActionButton>
+        
+        <ActionButton onClick={handleVideoClick}>
+          🎬 AI 복원 영상 보기
+        </ActionButton>
+        
+        <ActionButton onClick={handleDetailClick}>
+          📖 장소 정보 보기
+        </ActionButton>
       </Content>
       
-      <BottomNav>
-        <NavIcon>🏠</NavIcon>
-        <NavIcon>🗺️</NavIcon>
-        <NavIcon>🔍</NavIcon>
-        <NavIcon>📋</NavIcon>
-      </BottomNav>
+      <BottomNavigation />
     </Container>
   );
 }

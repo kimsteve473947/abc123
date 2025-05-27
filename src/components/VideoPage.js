@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { useProgress } from '../context/ProgressContext';
 
 const Container = styled.div`
   width: 100%;
@@ -105,30 +106,7 @@ const PlayButton = styled.button`
   }
 `;
 
-const BottomNav = styled.div`
-  width: 100%;
-  height: 80px;
-  background-color: rgba(0,0,0,0.8);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-`;
 
-const NavIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 24px;
-  color: rgba(255,255,255,0.8);
-  transition: color 0.2s ease;
-  
-  &:hover {
-    color: white;
-  }
-`;
 
 const videoData = {
   'daein-market': {
@@ -154,6 +132,7 @@ function VideoPage() {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
+  const { markVideoCompleted } = useProgress();
   
   const videoInfo = videoData[locationId];
 
@@ -168,10 +147,11 @@ function VideoPage() {
   const handleVideoEnd = () => {
     setIsPlaying(false);
     setShowOverlay(true);
+    markVideoCompleted(locationId);
   };
 
   const handleBackClick = () => {
-    navigate('/');
+    navigate(`/mission/${locationId}`);
   };
 
   if (!videoInfo) {
@@ -205,12 +185,7 @@ function VideoPage() {
         )}
       </VideoContainer>
       
-      <BottomNav>
-        <NavIcon>🏠</NavIcon>
-        <NavIcon>🗺️</NavIcon>
-        <NavIcon>🔍</NavIcon>
-        <NavIcon>📋</NavIcon>
-      </BottomNav>
+
     </Container>
   );
 }
