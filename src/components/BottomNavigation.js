@@ -59,6 +59,12 @@ function BottomNavigation() {
       path: '/map'
     },
     {
+      id: 'social',
+      icon: '👥',
+      label: '커뮤니티',
+      path: '/social'
+    },
+    {
       id: 'progress',
       icon: '📊',
       label: '진행상황',

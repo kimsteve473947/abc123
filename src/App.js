@@ -8,6 +8,9 @@ import VideoPage from './components/VideoPage';
 import ProgressPage from './components/ProgressPage';
 import LocationDetailPage from './components/LocationDetailPage';
 import InfoPage from './components/InfoPage';
+import ARViewPage from './components/ARViewPage';
+import AudioGuidePage from './components/AudioGuidePage';
+import SocialPage from './components/SocialPage';
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
             <Route path="/mission/:locationId" element={<MissionPage />} />
             <Route path="/video/:locationId" element={<VideoPage />} />
             <Route path="/location/:locationId" element={<LocationDetailPage />} />
+            <Route path="/ar/:locationId" element={<ARViewPage />} />
+            <Route path="/audio/:locationId" element={<AudioGuidePage />} />
+            <Route path="/social" element={<SocialPage />} />
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/info" element={<InfoPage />} />
           </Routes>
