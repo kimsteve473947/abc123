@@ -2,7 +2,7 @@
   "name": "gwangju-dark-tourism",
   "version": "1.0.0",
   "description": "광주 다크투어리즘 웹앱 - 소년이 온다 배경",
-  "homepage": "https://gimjunghwi.github.io/gwangju-dark-tourism",
+  "homepage": ".",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
